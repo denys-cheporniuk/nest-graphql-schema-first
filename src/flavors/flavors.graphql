@@ -1,0 +1,4 @@
+type Flavor {
+  id: ID!
+  name: String!
+}
