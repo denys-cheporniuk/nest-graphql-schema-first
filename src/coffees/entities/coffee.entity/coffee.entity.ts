@@ -1,9 +1,9 @@
 import {
-  Column,
+  Column, CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
-  PrimaryGeneratedColumn,
+  PrimaryGeneratedColumn
 } from 'typeorm';
 import { Coffee } from '../../../graphql';
 import { FlavorModel } from '../../../flavors/entities/flavor.entity/flavor.entity';
@@ -24,4 +24,7 @@ export class CoffeeModel implements Coffee {
     cascade: true,
   })
   flavors?: FlavorModel[];
+
+  @CreateDateColumn()
+  createdAt?: Date | null;
 }
