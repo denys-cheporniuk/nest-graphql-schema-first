@@ -6,9 +6,10 @@ import { CoffeeModel } from './entities/coffee.entity/coffee.entity';
 import { FlavorModel } from '../flavors/entities/flavor.entity/flavor.entity';
 import { CoffeeFlavorsResolver } from './coffee-flavor.resolver';
 import { PubSubModule } from '../pub-sub/pub-sub.module';
+import { FlavorsByCoffeeLoader } from './data-loader/flavors-by-coffee.loader/flavors-by-coffee.loader';
 
 @Module({
   imports: [TypeOrmModule.forFeature([CoffeeModel, FlavorModel]), PubSubModule],
-  providers: [CoffeeService, CoffeeResolver, CoffeeFlavorsResolver],
+  providers: [CoffeeService, CoffeeResolver, CoffeeFlavorsResolver, FlavorsByCoffeeLoader],
 })
 export class CoffeeModule {}
