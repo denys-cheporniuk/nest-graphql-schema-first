@@ -1,22 +1,22 @@
 import { Injectable, Scope } from '@nestjs/common';
 import DataLoader from 'dataloader';
-import { FlavorModel } from '../../../flavors/entities/flavor.entity/flavor.entity';
+import { FlavorEntity } from '../../../flavors/entities/flavor.entity/flavor.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CoffeeModel } from '../../entities/coffee.entity/coffee.entity';
+import { CoffeeEntity } from '../../entities/coffee.entity/coffee.entity';
 import { In, Repository } from 'typeorm';
 
 @Injectable({ scope: Scope.REQUEST })
-export class FlavorsByCoffeeLoader extends DataLoader<number, FlavorModel[]> {
+export class FlavorsByCoffeeLoader extends DataLoader<number, FlavorEntity[]> {
   constructor(
-    @InjectRepository(CoffeeModel)
-    private readonly coffeesRepository: Repository<CoffeeModel>,
+    @InjectRepository(CoffeeEntity)
+    private readonly coffeesRepository: Repository<CoffeeEntity>,
   ) {
     super((keys) => this.batchLoadFn(keys));
   }
 
   private async batchLoadFn(
     coffeeIds: readonly number[],
-  ): Promise<FlavorModel[][]> {
+  ): Promise<FlavorEntity[][]> {
     const coffeesWithFlavors = await this.coffeesRepository.find({
       select: ['id'],
       relations: ['flavors'],

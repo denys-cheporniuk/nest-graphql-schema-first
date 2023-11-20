@@ -6,10 +6,10 @@ import {
   PrimaryGeneratedColumn
 } from 'typeorm';
 import { Coffee } from '../../../graphql';
-import { FlavorModel } from '../../../flavors/entities/flavor.entity/flavor.entity';
+import { FlavorEntity } from '../../../flavors/entities/flavor.entity/flavor.entity';
 
 @Entity()
-export class CoffeeModel implements Coffee {
+export class CoffeeEntity implements Coffee {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,10 +20,10 @@ export class CoffeeModel implements Coffee {
   brand: string;
 
   @JoinTable()
-  @ManyToMany(() => FlavorModel, (flavor) => flavor.coffees, {
+  @ManyToMany(() => FlavorEntity, (flavor) => flavor.coffees, {
     cascade: true,
   })
-  flavors?: FlavorModel[];
+  flavors?: FlavorEntity[];
 
   @CreateDateColumn()
   createdAt?: Date | null;

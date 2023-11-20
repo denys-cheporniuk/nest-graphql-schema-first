@@ -1,27 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CoffeeModel } from './entities/coffee.entity/coffee.entity';
+import { CoffeeEntity } from './entities/coffee.entity/coffee.entity';
 import { UserInputError } from 'apollo-server-express';
 import { CreateCoffeeInputDto, UpdateCoffeeInputDto } from './dto';
-import { FlavorModel } from '../flavors/entities/flavor.entity/flavor.entity';
+import { FlavorEntity } from '../flavors/entities/flavor.entity/flavor.entity';
 import { PubSub } from 'graphql-subscriptions';
 
 @Injectable()
 export class CoffeeService {
   constructor(
-    @InjectRepository(CoffeeModel)
-    private readonly coffeesRepository: Repository<CoffeeModel>,
-    @InjectRepository(FlavorModel)
-    private readonly flavorsRepository: Repository<FlavorModel>,
+    @InjectRepository(CoffeeEntity)
+    private readonly coffeesRepository: Repository<CoffeeEntity>,
+    @InjectRepository(FlavorEntity)
+    private readonly flavorsRepository: Repository<FlavorEntity>,
     private readonly pubSub: PubSub,
   ) {}
 
-  async findAll(): Promise<CoffeeModel[]> {
+  async findAll(): Promise<CoffeeEntity[]> {
     return this.coffeesRepository.find();
   }
 
-  async getOne(id: number): Promise<CoffeeModel> {
+  async getOne(id: number): Promise<CoffeeEntity> {
     const coffee = await this.coffeesRepository.findOne({
       where: {
         id,
@@ -35,7 +35,7 @@ export class CoffeeService {
     return coffee;
   }
 
-  async create(createCoffeeInput: CreateCoffeeInputDto): Promise<CoffeeModel> {
+  async create(createCoffeeInput: CreateCoffeeInputDto): Promise<CoffeeEntity> {
     const flavors = await Promise.all(
       createCoffeeInput.flavors.map((flavor) =>
         this.preloadFlavorByName(flavor),
@@ -56,7 +56,7 @@ export class CoffeeService {
   async update(
     id: number,
     updateCoffeeInput: UpdateCoffeeInputDto,
-  ): Promise<CoffeeModel> {
+  ): Promise<CoffeeEntity> {
     let flavors;
 
     if (updateCoffeeInput.flavors) {
@@ -80,13 +80,13 @@ export class CoffeeService {
     return this.coffeesRepository.save(coffee);
   }
 
-  async remove(id: number): Promise<CoffeeModel> {
+  async remove(id: number): Promise<CoffeeEntity> {
     const coffee = await this.getOne(id);
 
     return this.coffeesRepository.remove(coffee);
   }
 
-  private async preloadFlavorByName(name: string): Promise<FlavorModel> {
+  private async preloadFlavorByName(name: string): Promise<FlavorEntity> {
     const existingFlavor = await this.flavorsRepository.findOne({
       where: { name },
     });
